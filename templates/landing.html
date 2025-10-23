@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#000000" />
+  <link rel="shortcut icon" href="./assets/img/favicon.ico" />
+  <link rel="apple-touch-icon" sizes="76x76" href="./assets/img/apple-icon.png" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+  <link rel="stylesheet"
+    href="https://cdn.jsdelivr.net/gh/creativetimofficial/tailwind-starter-kit/compiled-tailwind.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <title>Amazon Alexa Reviews Analysis</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+    }
+    
+    .hero-gradient {
+      background: linear-gradient(135deg, #11dfa9 0%, #033c58 49%, #0a2032 100%);
+    }
+    
+    .card-gradient {
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    }
+    
+    .btn-gradient {
+      background: linear-gradient(135deg, #11dfa9 0%, #033c58 100%);
+      transition: all 0.3s ease;
+    }
+    
+    .btn-gradient:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+    
+    .floating {
+      animation: floating 3s ease-in-out infinite;
+    }
+    
+    @keyframes floating {
+      0% { transform: translate(0, 0px); }
+      50% { transform: translate(0, 15px); }
+      100% { transform: translate(0, -0px); }
+    }
+    
+    .pulse {
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(17, 223, 169, 0.4); }
+      70% { box-shadow: 0 0 0 10px rgba(17, 223, 169, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(17, 223, 169, 0); }
+    }
+    
+    .result-card {
+      transition: all 0.3s ease;
+    }
+    
+    .result-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+  </style>
+</head>
+
+<body class="text-gray-800 antialiased">
+  <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.js" defer></script>
+
+  <main>
+    <div class="relative pt-16 pb-32 flex content-center items-center justify-center" style="min-height: 85vh;">
+      <div class="absolute top-0 w-full h-full bg-center bg-cover hero-gradient">
+        <span id="blackOverlay" class="w-full h-full absolute opacity-30 bg-black"></span>
+      </div>
+      <div class="container relative mx-auto">
+        <div class="items-center flex flex-wrap">
+          <div class="w-full lg:w-6/12 px-4 ml-auto mr-auto text-center">
+            <div class="pr-12 floating">
+              <h1 class="text-white font-bold text-6xl mb-6">
+                Understand the emotions behind the words. 😊
+              </h1>
+              <p class="mt-4 text-xl text-gray-200">
+                Text sentiment prediction is a powerful tool that can help you understand the emotions and opinions
+                expressed in your text data. This information can be used to improve your business in a number of ways.
+              </p>
+              <div class="mt-8">
+                <a href="#prediction-section" class="btn-gradient text-white font-semibold py-3 px-8 rounded-full text-lg inline-block pulse">
+                  Get Started
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="top-auto bottom-0 left-0 right-0 w-full absolute pointer-events-none overflow-hidden"
+        style="height: 70px;">
+        <svg class="absolute bottom-0 overflow-hidden" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none"
+          version="1.1" viewBox="0 0 2560 100" x="0" y="0">
+          <polygon class="text-gray-100 fill-current" points="2560 0 2560 100 0 100"></polygon>
+        </svg>
+      </div>
+    </div>
+
+    <section id="prediction-section" class="relative py-20 bg-gray-50">
+      <div class="container mx-auto px-4 py-24">
+        <div class="flex flex-col items-center justify-center mb-16">
+          <h1 class="text-5xl font-bold text-gray-800 py-2">Text Sentiment Prediction</h1>
+          <p class="text-xl text-gray-600 max-w-2xl text-center mt-4">
+            Upload a CSV file with text data or enter text directly to analyze sentiment
+          </p>
+        </div>
+        
+        <div class="items-center flex flex-wrap">
+          <div class="w-full md:w-5/12 ml-auto mr-auto px-4">
+            <div class="card-gradient rounded-2xl shadow-xl p-8">
+              <form id="predictionForm">
+                <div class="max-w-sm mx-auto">
+                  <div class="relative flex flex-wrap">
+                    <div class="w-full relative">
+                      <div class="mt-2">
+                        <div class="py-4">
+                          <label class="px-1 text-lg font-medium text-gray-700">Upload your CSV file</label>
+                          <div class="mt-2 relative">
+                            <input type="file" id="csvFileInput" accept=".csv"
+                              class="text-md block px-3 py-4 rounded-xl w-full
+                                bg-white border-2 border-gray-300 placeholder-gray-600 shadow-md focus:placeholder-gray-500 focus:bg-white focus:border-blue-500 focus:outline-none transition-all duration-300">
+                            <div class="absolute right-3 top-3 text-gray-400">
+                              <i class="fas fa-file-csv text-xl"></i>
+                            </div>
+                          </div>
+                          <p class="text-sm text-gray-500 mt-2">Upload a CSV file with a 'text' column for analysis</p>
+                        </div>
+
+                        <div class="py-4">
+                          <label class="px-1 text-lg font-medium text-gray-700">Text for Prediction</label>
+                          <textarea
+                            class="text-md block px-3 py-4 rounded-xl w-full h-32
+                              bg-white border-2 border-gray-300 placeholder-gray-600 shadow-md focus:placeholder-gray-500 focus:bg-white focus:border-blue-500 focus:outline-none transition-all duration-300"
+                            id="textInput" placeholder="Enter text to analyze sentiment..."></textarea>
+                        </div>
+
+                        <button type="button" onclick="predict()" class="mt-6 text-lg font-semibold
+                                                            btn-gradient w-full text-white rounded-xl
+                                                     px-6 py-4 block shadow-xl">
+                          <i class="fas fa-chart-bar mr-2"></i>Analyze Sentiment
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+          
+          <div class="w-full md:w-5/12 ml-auto mr-auto px-4 mt-10 md:mt-0">
+            <div class="result-card bg-white rounded-2xl shadow-xl p-8 mb-8">
+              <h1 class="text-3xl font-bold text-gray-800 mb-4 flex items-center">
+                <i class="fas fa-chart-pie text-blue-500 mr-3"></i>Prediction Result
+              </h1>
+              <div class="p-4 m-2 border-2 border-dashed border-gray-200 rounded-xl min-h-32 flex items-center justify-center">
+                <div id="predictionResult" class="text-center text-gray-500">
+                  <i class="fas fa-info-circle text-2xl mb-2"></i>
+                  <p>Results will appear here after analysis</p>
+                </div>
+              </div>
+            </div>
+            
+            <div class="result-card bg-white rounded-2xl shadow-xl p-8">
+              <h1 class="text-3xl font-bold text-gray-800 mb-4 flex items-center">
+                <i class="fas fa-chart-line text-green-500 mr-3"></i>Visualization
+              </h1>
+              <div class="p-4 m-2 border-2 border-dashed border-gray-200 rounded-xl min-h-64 flex items-center justify-center">
+                <div id="graphContainer" class="text-center text-gray-500">
+                  <i class="fas fa-chart-bar text-2xl mb-2"></i>
+                  <p>Graphs and charts will appear here for CSV analysis</p>
+                </div>
+              </div>
+            </div>
+            
+            <button id="downloadBtn" style="display:none" onclick="downloadPredictions()" class="mt-8 text-lg font-semibold
+            btn-gradient w-full text-white rounded-xl px-6 py-4 block shadow-xl">
+              <i class="fas fa-download mr-2"></i>Download Predictions
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-20 bg-white">
+      <div class="container mx-auto px-4">
+        <div class="flex flex-col items-center justify-center mb-16">
+          <h2 class="text-4xl font-bold text-gray-800">How It Works</h2>
+          <p class="text-xl text-gray-600 max-w-2xl text-center mt-4">
+            Our advanced sentiment analysis helps you understand customer emotions
+          </p>
+        </div>
+        
+        <div class="flex flex-wrap -mx-4">
+          <div class="w-full md:w-1/3 px-4 mb-8">
+            <div class="bg-white rounded-xl shadow-lg p-6 text-center h-full">
+              <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-blue-100 flex items-center justify-center">
+                <i class="fas fa-upload text-blue-500 text-2xl"></i>
+              </div>
+              <h3 class="text-xl font-bold text-gray-800 mb-2">Upload Data</h3>
+              <p class="text-gray-600">Upload your CSV file or enter text directly for analysis</p>
+            </div>
+          </div>
+          
+          <div class="w-full md:w-1/3 px-4 mb-8">
+            <div class="bg-white rounded-xl shadow-lg p-6 text-center h-full">
+              <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-green-100 flex items-center justify-center">
+                <i class="fas fa-cogs text-green-500 text-2xl"></i>
+              </div>
+              <h3 class="text-xl font-bold text-gray-800 mb-2">AI Analysis</h3>
+              <p class="text-gray-600">Our AI model analyzes the text to determine sentiment</p>
+            </div>
+          </div>
+          
+          <div class="w-full md:w-1/3 px-4 mb-8">
+            <div class="bg-white rounded-xl shadow-lg p-6 text-center h-full">
+              <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-purple-100 flex items-center justify-center">
+                <i class="fas fa-chart-bar text-purple-500 text-2xl"></i>
+              </div>
+              <h3 class="text-xl font-bold text-gray-800 mb-2">Get Insights</h3>
+              <p class="text-gray-600">Receive detailed sentiment analysis and visualizations</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  
+  <footer class="relative bg-gray-900 pt-8 pb-6">
+    <div class="container mx-auto px-4">
+      <div class="flex flex-wrap items-center md:justify-between justify-center">
+        <div class="w-full md:w-4/12 px-4 mx-auto text-center">
+          <div class="text-sm text-white font-semibold py-1">
+            Copyright © Text Sentiment Prediction
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+</body>
+<script>
+  function predict() {
+    // Check if CSV file is present
+    var csvFileInput = document.getElementById("csvFileInput");
+    var textInput = document.getElementById("textInput");
+    var predictionResult = document.getElementById("predictionResult");
+    var graphContainer = document.getElementById("graphContainer");
+
+    if (csvFileInput.files.length > 0) {
+      // Upload CSV file
+      var formData = new FormData();
+      formData.append("file", csvFileInput.files[0]);
+
+      fetch("http://localhost:5000/predict", {
+        method: "POST",
+        body: formData
+      })
+        .then(response => {
+          if (response.headers.get('X-Graph-Exists') === 'true') {
+            console.log("Graph")
+            var graphData = response.headers.get('X-Graph-Data');
+            displayGraph(graphData);
+          }
+
+          return response.blob();
+        })
+        .then(blob => {
+          console.log("Blob:", blob);
+
+          document.getElementById("downloadBtn").style.display = "block";
+          document.getElementById("downloadBtn").onclick = function () {
+            console.log("Downloading...");
+            var url = URL.createObjectURL(blob);
+            console.log("URL:", url);
+
+            var a = document.createElement("a");
+            a.href = url;
+            a.download = "Predictions.csv";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+          };
+        })
+        .catch(error => {
+          console.error("Error:", error);
+        });
+
+    } else if (textInput.value.trim() !== "") {
+      // Predict on single sentence
+      fetch("http://localhost:5000/predict", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ "text": textInput.value.trim() })
+      })
+        .then(response => response.json())
+        .then(data => {
+          console.log(data)
+          // Add visual feedback based on sentiment
+          let sentimentClass = "text-gray-700";
+          let sentimentIcon = "fas fa-meh";
+          
+          if (data.prediction.toLowerCase().includes("positive")) {
+            sentimentClass = "text-green-600";
+            sentimentIcon = "fas fa-smile";
+          } else if (data.prediction.toLowerCase().includes("negative")) {
+            sentimentClass = "text-red-600";
+            sentimentIcon = "fas fa-frown";
+          }
+          
+          predictionResult.innerHTML = `
+            <div class="text-center ${sentimentClass}">
+              <i class="${sentimentIcon} text-4xl mb-3"></i>
+              <h3 class="text-2xl font-bold">${data.prediction}</h3>
+              <p class="mt-2">Sentiment Analysis Complete</p>
+            </div>
+          `;
+        });
+    } else {
+      // Show error if no input provided
+      predictionResult.innerHTML = `
+        <div class="text-center text-yellow-600">
+          <i class="fas fa-exclamation-triangle text-2xl mb-2"></i>
+          <p>Please upload a CSV file or enter text for analysis</p>
+        </div>
+      `;
+    }
+  }
+
+  function downloadPredictions() {
+    console.log("Download prediction")
+  }
+
+  function displayGraph(graphData) {
+    predictionResult.innerHTML = "";
+    var graphUrl = "data:image/png;base64," + graphData;
+    var img = document.createElement('img');
+    img.src = graphUrl;
+    img.className = "w-full h-auto rounded-lg";
+    graphContainer.innerHTML = "";
+    graphContainer.appendChild(img);
+  }
+</script>
+
+</html>
